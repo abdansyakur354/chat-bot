@@ -24,9 +24,6 @@ Bot ini dirancang agar mudah dikustomisasi dan dipahami oleh pemula dalam dunia 
 5. **Upload Foto Profil**  
    Pengguna dapat mengunggah dan mengganti foto profil mereka langsung dari halaman dengan mengklik gambar profil.
 
-6. **Edit Deskripsi Pengguna**  
-   Pengguna dapat mengubah deskripsi profil secara langsung dengan mengklik teks deskripsi. Deskripsi baru akan disimpan dan tampil secara langsung.
-
 ## Teknologi yang Digunakan
 - **HTML** – Struktur halaman web.
 - **CSS** – Desain dan animasi.
