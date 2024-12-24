@@ -181,6 +181,13 @@ body {
   border-bottom: 1px solid #ddd;
 }
 
+.message-center {
+  background-color: #33333379;
+  color: white;
+  margin: auto;
+  padding: 5px;
+}
+
 .chat-box .message {
   margin: 5px 0;
   padding: 8px 12px;
