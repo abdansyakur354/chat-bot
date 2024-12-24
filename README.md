@@ -32,7 +32,7 @@ Bot ini dirancang agar mudah dikustomisasi dan dipahami oleh pemula dalam dunia 
 ## Cara Menggunakan
 1. Clone repositori ini:
    ```bash
-   git clone https://github.com/username/repo-name
+   git clone https://github.com/abdansyakur354/chat-bot.git
    ```
 2. Buka file `index.html` di browser.
 3. Interaksi dapat dilakukan langsung dari halaman web.
