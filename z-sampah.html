@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sampah</title>
+    </head>
+    <body>
+
+
+        <div class="chat-container">
+            <div class="container-header">
+              <div class="chat-header">
+                <div class="profile-container">
+                  <img src="profile.png" alt="User Profile" class="profile-image" />
+                  <span class="username">User123</span>
+                </div>
+                <div class="menu-container">
+                  <button class="menu-button">⋮</button>
+                  <div class="dropdown-menu">
+                    <a href="#" onclick="clearChat()">Clear Chat</a>
+                    <a href="#" onclick="setUsername('Guest')">Change Username</a>
+  
+                    
+                    <a href="#" onclick="changeProfile('img-profile/profile1.jpg')">Profile 1</a>
+                    <a href="#" onclick="changeProfile('img-profile/profile2.jpg')">Profile 2</a>
+                    <a href="#" onclick="changeProfile('img-profile/profile3.jpg')">Profile 3</a>
+                    <a href="#">About</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="chat-box" id="chat-box"></div>
+  
+            <div class="chat-input-container">
+              <input type="text" id="user-input" placeholder="Ketik pesan..." />
+              <button onclick="sendMessage()">Kirim</button>
+              <!-- <button onclick="clearChat()">Clear</button> -->
+            </div>
+        </div>
+        
+        <style>
+        
+        
+            .chat-container {
+                width: 100%;
+                max-width: 400px;
+                margin: 50px auto;
+                background-color: #fff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 10px;
+                overflow: hidden;
+            }
+            
+            .container-header {
+                background-color: #25D366;
+
+            }
+            .chat-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 90%;
+                margin: auto;
+                color: #fff;
+                padding: 10px;
+            }
+
+            /* Styling untuk container profil */
+            .profile-container {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            /* Styling untuk gambar profil */
+            .profile-image {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid #ccc;
+            }
+
+            /* Styling untuk username */
+            .username {
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            /* Menu */
+            /* Styling untuk container menu */
+            .menu-container {
+                position: relative;
+                display: inline-block;
+            }
+
+            /* Tombol menu titik tiga */
+            .menu-button {
+                background: none;
+                border: none;
+                font-size: 30px;
+                cursor: pointer;
+                color: #6d1212;
+                padding: 5px;
+            }
+
+            /* Styling dropdown menu */
+            .dropdown-menu {
+                display: none;
+                position: absolute;
+                top: 60px;
+                right: 0;
+                background-color: #fff;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 5px;
+                overflow: hidden;
+                z-index: 1000;
+                min-width: 150px;
+            }
+
+            /* Item di dalam dropdown */
+            .dropdown-menu a {
+                display: block;
+                padding: 10px 15px;
+                text-decoration: none;
+                color: #333;
+                font-size: 14px;
+                transition: background 0.3s ease;
+            }
+
+            .dropdown-menu a:hover {
+                background-color: #f0f0f0;
+            }
+
+            /* Tampilkan menu dropdown */
+            .menu-container.active .dropdown-menu {
+                display: block;
+            }
+            
+
+            /* Gaya untuk gambar profil */
+            .profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ccc;
+            transition: transform 0.2s ease; /* Tambahkan animasi jika perlu */
+            }
+
+            .profile-image:hover {
+            transform: scale(1.1); /* Efek zoom kecil saat dihover */
+            }
+
+
+            /* Box Chat */
+            .chat-box {
+                height: 500px;
+                overflow-y: auto;
+                padding: 10px;
+                background: #fafafa;
+                border-bottom: 1px solid #ddd;
+            }
+            
+            .chat-box .message {
+                margin: 5px 0;
+                padding: 8px 12px;
+                border-radius: 8px;
+            }
+            
+            .message.user {
+                background-color: #DCF8C6;
+                text-align: right;
+            }
+            
+            .message.bot {
+                background-color: #f1f1f1;
+                text-align: left;
+            }
+            
+            .chat-input-container {
+                display: flex;
+                padding: 10px;
+                border-top: 1px solid #ddd;
+            }
+            
+            .chat-input-container input {
+                flex: 1;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                margin-right: 10px;
+            }
+            
+            .chat-input-container button {
+                padding: 10px;
+                border: none;
+                background-color: #25D366;
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            
+            .chat-input-container button:hover {
+                background-color: #128C7E;
+            }
+            
+            /* Animasi loading */
+            .message.loading::after {
+                content: "⋯";
+                display: inline-block;
+                animation: dots 1.2s steps(4, end) infinite;
+            }
+            
+            @keyframes dots {
+                from {
+                content: "⋯";
+                }
+                25% {
+                content: ".⋯";
+                }
+                50% {
+                content: "..⋯";
+                }
+                75% {
+                content: "...";
+                }
+                to {
+                content: "⋯";
+                }
+            }
+
+            /* Animasi fade-out */
+            .fade-out {
+                opacity: 0;
+                transition: opacity 0.5s ease-out;
+            }
+  
+        </style>
+        <script>
+            // Username
+            function setUsername(newUsername) {
+            const usernameElement = document.querySelector(".username");
+            usernameElement.textContent = newUsername || "User123"; // Default username
+            }
+
+            // Contoh penggunaan
+            setUsername("Zenos Aulia");
+
+            // Menu
+            // Toggle menu dropdown
+            document.querySelector(".menu-button").addEventListener("click", function () {
+            const menuContainer = document.querySelector(".menu-container");
+            menuContainer.classList.toggle("active");
+            });
+
+            // Tutup dropdown jika klik di luar menu
+            document.addEventListener("click", function (event) {
+            const menuContainer = document.querySelector(".menu-container");
+            if (!menuContainer.contains(event.target)) {
+                menuContainer.classList.remove("active");
+            }
+            });
+
+            // Fungsi untuk mengganti gambar profil
+            function changeProfile(imageSrc) {
+            const profileImage = document.querySelector(".profile-image");
+            profileImage.src = imageSrc;
+            }
+
+            // Chat Bot
+            const chatBox = document.getElementById("chat-box");
+            const userInput = document.getElementById("user-input");
+
+            // Kamus sinonim sederhana
+            const synonyms = {
+                "clear": ["hapus", "clr", "bersihkan", "hilangkan"],
+                "menu": ["command", "perintah", "keyword", "help"],
+
+                // "hai": ["Hai, gimana kabar? Aku lagi pengen ngomong sesuatu nih, tapi udah lama pengen bilang."],
+                // "jadi": ["jadi gini", "Jadi gini... aku ngerasa ada yang beda dari kamu. Maksudnya, kamu tuh punya cara sendiri untuk nyalurin energi positif, cara kamu senyum, semuanya... Susah jelasinya, tapi setiap kali ngeliat kamu rasanya tuh beda aja."],
+                // "ya": ["iya", "Ya, kamu itu gak kayak kebanyakan orang."],
+                // "jalan": ["Tapi ada satu hal lagi, aku pengen ngajak kamu jalan. Kalau kamu ada waktu, bisa nggak? Aku rasa, kita bisa ngobrol lebih banyak lagi."],
+                // "gimana": ["oiya", "Gimana kalau akhir pekan ini? Aku pikir kita bisa makan bareng atau cuma jalan-jalan santai aja, nggak ada yang buru-buru."],
+
+                "hai": ["halo", "helo", "hi", "hello"],
+                "bagaimana": ["gimana", "bagaimanakah", ],
+                "terima kasih": ["makasih", "thanks", "thank you"],
+                "bye": ["dadah", "selamat tinggal"],
+                "siapa kamu": ["kamu siapa", "bot siapa", "what's your name"],
+                "halu": ["halusinasi", "ngehalu"],
+                "tanggal": ["hari ini tanggal", "tanggal hari ini"],
+                "waktu": ["jam berapa", "pukul berapa"]
+            };
+
+
+            // Respon chatbot
+            function getBotResponse(input) {
+                const lowerInput = input.toLowerCase();
+            
+                // Logika berdasarkan input pengguna
+                if (matchesInput(lowerInput, "menu")) {
+                return `
+                    <h1>Command List</h1>
+                    <pre style="background-color: #f4f4f4;
+                            border: 1px solid #ddd;
+                            padding: 15px;
+                            border-radius: 5px;
+                            overflow-x: auto;
+                            widht: 100%;">
+                        Berikut merupakan perintah yang baru bisa di gunakan.
+
+                        Options:
+
+                        - Hai             Menyapa
+                        - Siapa kamu      Memberi tau nama dan tugas
+                        - Bagaimana       Menanyakan kabar
+                        - Terima Kasih    Berterima kasih atas perhatian
+                        - Bye             Ucapan perpisahan
+                        - Tanggal         Memberi tau tangggal secara realtime
+                        - Waktu           Memberi tau waktu secara realtime
+                        - Halu            Membayangkan sesuatu yang tidak nyata
+                    </pre>
+                `;
+                } 
+                
+                // else if (matchesInput(lowerInput, "hai")) {
+                //   return "Halo! Kabarku baik kok. Apa yang pengen kamu omongin?";
+                // } else if (matchesInput(lowerInput, "jadi")) {
+                //   return "Aduh, kok jadi penasaran ya. Maksudnya apa tuh? Beda gimana?";
+                // } else if (matchesInput(lowerInput, "gimana")) {
+                //     return "Sounds good! Aku tungguin ya, akhir pekan ini. Ayo kita jalan!";
+                // } else if (matchesInput(lowerInput, "jalan")) {
+                //   return "Eh, seru juga ya! Kayaknya aku bisa jalan kok. Kapan?";
+                // }  else if (matchesInput(lowerInput, "ya")) {
+                //   return "Wow, seriusan?";
+                // }
+                
+                else if (matchesInput(lowerInput, "hai")) {
+                return "Halo! Ada yang bisa saya bantu?";
+                } else if (matchesInput(lowerInput, "bagaimana")) {
+                return "Saya baik, bagaimana dengan Anda?";
+                } else if (matchesInput(lowerInput, "terima kasih")) {
+                return "Sama-sama! 😊";
+                } else if (matchesInput(lowerInput, "bye")) {
+                return "Selamat tinggal! Sampai jumpa lagi.";
+                } else if (matchesInput(lowerInput, "siapa kamu")) {
+                return "Saya adalah chatbot sederhana yang dibuat untuk membantu Anda.";
+                } else if (matchesInput(lowerInput, "halu")) {
+                return "Dalam bahasa gaul, ngehalu berasal dari kata halusinasi. Artinya adalah membayangkan sesuatu yang tidak nyata atau berimajinasi berlebihan. Biasanya istilah ini digunakan untuk menggambarkan seseorang yang terlalu berkhayal atau membayangkan sesuatu yang jauh dari kenyataan.";
+                } 
+                
+                else if (matchesInput(lowerInput, "tanggal")) {
+                return `Hari ini adalah ${new Date().toLocaleDateString("id-ID")}.`;
+                } else if (matchesInput(lowerInput, "waktu")) {
+                return `Sekarang pukul ${new Date().toLocaleTimeString("id-ID")}.`;
+                } else if (lowerInput.startsWith("hitung")) {
+                return calculateMath(lowerInput);
+                } else if (matchesInput(lowerInput, "clear")) {
+                    return clearChat();
+                } else {
+                return "Maaf, saya tidak mengerti pesan Anda. ";
+                }
+                }
+            
+            // Fungsi untuk menghitung matematika sederhana
+            function calculateMath(input) {
+                const mathExpression = input.replace("hitung", "").trim(); // Hapus kata "hitung"
+                try {
+                const result = eval(mathExpression); // Evaluasi ekspresi matematika
+                return `Hasilnya adalah ${result}`;
+                } catch (error) {
+                return "Maaf, saya tidak dapat memahami ekspresi matematika Anda.";
+                }
+            }
+
+            // Fungsi mencocokkan input dengan sinonim
+            function matchesInput(input, key) {
+            if (input.includes(key)) return true;
+            for (let synonym of synonyms[key] || []) {
+                if (input.includes(synonym)) return true;
+            }
+            return false;
+            }
+            function safeCalculate(expression) {
+                try {
+                const sanitized = expression.replace(/[^-()\d/*+.]/g, ""); // Hapus karakter ilegal
+                return Function(`'use strict'; return (${sanitized})`)();
+                } catch {
+                return "Ekspresi matematika tidak valid.";
+                }
+            }
+
+            // Menambahkan pesan ke chatbox
+            function addMessage(sender, text) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = text;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+            }
+            function sendMessage() {
+                const input = userInput.value.trim();
+                if (input === "") return;
+            
+                // Pesan pengguna
+                addMessage("user", input);
+            
+                // Tambahkan animasi loading
+                const loadingMessage = document.createElement("div");
+                loadingMessage.className = "message bot loading";
+                loadingMessage.innerHTML = "Bot sedang mengetik";
+                chatBox.appendChild(loadingMessage);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            
+                userInput.value = "";
+            
+                // Simulasi respon bot dengan delay
+                setTimeout(() => {
+                chatBox.removeChild(loadingMessage); // Hapus animasi loading
+                const botResponse = getBotResponse(input); // Dapatkan respon bot
+                addMessage("bot", botResponse);
+                }, 1500); // Delay 1.5 detik untuk simulasi mengetik
+            }
+
+            function clearChat() {
+                const messages = document.querySelectorAll(".message"); // Ambil semua pesan
+            
+                // Tambahkan animasi fade-out ke setiap pesan
+                messages.forEach((message) => {
+                message.classList.add("fade-out");
+                });
+            
+                // Tunggu animasi selesai sebelum menghapus pesan
+                setTimeout(() => {
+                chatBox.innerHTML = ""; // Hapus semua pesan dari chatbox
+                }, 500); // Delay sesuai durasi animasi (0.5 detik)
+            }      
+        </script>
+    </body>
+</html>
